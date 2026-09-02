@@ -1,5 +1,5 @@
 -- set how long splash will exist
-local splashframes = 24
+local splashframes = 12
 
 local splash = {}
 splash.__index = splash
