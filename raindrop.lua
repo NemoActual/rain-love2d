@@ -2,48 +2,49 @@ local raindrop = {}
 raindrop.__index = raindrop
 
 function raindrop.new()
-	local t = setmetatable({}, raindrop)
+    -- initial state
+    local drop = {}
+    -- inhereit raindrop table
+    setmetatable(drop, raindrop)
+    drop.x = love.math.random(love.graphics.getWidth())
+    drop.y = love.math.random(love.graphics.getHeight())
+    drop.target_y = love.math.random(love.graphics.getHeight())
+    drop.radius = 3 -- radius
+    drop.time = 0 -- time
+    drop.hit = false
 
-	t.x = math.random(love.graphics.getWidth())
-	t.y = math.random(love.graphics.getHeight())
-	t.ty = math.random(t.y, love.graphics.getHeight())
-
-	t.r = 2
-	t.s = 400
-	t.a = true
-
-	-- store where the drop hit
-	t.hx = 0
-	t.hy = 0
-
-	return t
+    return drop
 end
 
 function raindrop:update(dt)
-	self.a = true
+    -- move raindrop down
+    if not self.hit then self.y = self.y + 7 end
 
-	-- move drop down
-	self.y = self.y + self.s * dt
+    -- check if drop has past its target
+    if self.y > self.target_y and not self.hit then
+        self.hit = true
+    end
 
-	-- if raindrop reaches target
-	if self.y > self.ty then
+    -- if hit increase radius and time
+    if self.hit then
+        self.time = self.time + 1 
+        self.radius =  self.radius + 1
+    end
 
-		-- save impact position
-		self.hx = self.x
-		self.hy = self.ty
-
-		-- reset raindrop
-		self.y = 0
-		self.x = math.random(love.graphics.getWidth())
-		self.ty = math.random(love.graphics.getHeight())
-
-		self.a = false
-	end
+    -- reset finally after 10 frames
+    if self.time > 10 then
+        self.x = love.math.random(love.graphics.getWidth())
+        self.y = 0
+        self.target_y = love.math.random(love.graphics.getHeight())
+        self.time = 0
+        self.radius = 3
+        self.hit = false
+    end
 end
 
--- draw simple circle
 function raindrop:draw()
-	love.graphics.circle("line", self.x, self.y, self.r)
+    -- draw raindrop as simple circle
+    love.graphics.circle("line", self.x, self.y, self.radius)
 end
 
 return raindrop
