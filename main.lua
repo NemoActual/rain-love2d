@@ -6,9 +6,9 @@ local MAXDROPS = 256
 local raindrop = require "raindrop"
 
 function love.load()
+    -- set fullscreen
     love.window.setFullscreen(true)
-    -- timer 
-    timer = 0
+
     -- set random seed
     love.math.setRandomSeed(os.time())
 
@@ -26,22 +26,18 @@ function love.load()
 end
 
 function love.update(dt)
-    -- update timer
-    timer = timer + dt
     -- update drops
     for i = 1, MAXDROPS do
-        drops[i]:update()
+        drops[i]:update(dt)
     end
 end
 
 function love.draw()
-    if timer > 2.5 then
-        for i = 1, MAXDROPS do
-            drops[i]:draw()
-        end
-    else
-        love.graphics.print("Rain by Nemo", love.graphics.getWidth() / 2 - 128, love.graphics.getHeight() / 2, 0, 10)
+    -- draw drops
+    for i = 1, MAXDROPS do
+        drops[i]:draw()
     end
+
 end
 
 -- handle key input
